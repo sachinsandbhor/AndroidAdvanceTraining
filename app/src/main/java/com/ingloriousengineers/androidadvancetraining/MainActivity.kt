@@ -1,64 +1,38 @@
 package com.ingloriousengineers.androidadvancetraining
 
+import android.content.Intent
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v4.app.FragmentTransaction
-import android.widget.Button
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
+import com.google.gson.Gson
 
 class MainActivity : AppCompatActivity() {
 
-    var isFragmentDisplayed: Boolean = false
-    lateinit var btn: Button
-
-    val STATE_FRAGMENT = "state_of_fragment"
+    private val TAG: String = MainActivity::class.java.simpleName
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        loadData()
+    }
 
-        btn = findViewById(R.id.open_button)
-
-        if (savedInstanceState != null) {
-            isFragmentDisplayed = savedInstanceState.getBoolean(STATE_FRAGMENT)
-            if (isFragmentDisplayed) {
-                btn.text = getString(R.string.close)
-            }
-        }
-
-        btn.setOnClickListener {
-            if (!isFragmentDisplayed) {
-                displayFragment()
-            } else {
-                closeFragment()
-            }
+    private fun loadData() {
+        val result = Gson().fromJson(loadDataFromJson(), MovieList::class.java).results as List<Result>
+        val recyclerView: RecyclerView = findViewById(R.id.movie_list)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        recyclerView.adapter = MovieListAdapter(result) { movie: Result, position: Int ->
+            val movieIntent = Intent(this@MainActivity, MovieDetail::class.java)
+            movieIntent.putExtra("movie", movie)
+            startActivity(movieIntent)
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
-        outState!!.putBoolean(STATE_FRAGMENT, isFragmentDisplayed)
-        super.onSaveInstanceState(outState)
-    }
-
-    private fun closeFragment() {
-        val fragmentManager = supportFragmentManager
-        val simpleFragment = fragmentManager.findFragmentById(R.id.fragment_container)
-        if(simpleFragment != null) {
-            val fragmentTransaction =fragmentManager.beginTransaction()
-            fragmentTransaction.remove(simpleFragment).commit()
+    private fun loadDataFromJson(): String {
+       val response: String = applicationContext.assets.open("Movies.json").bufferedReader().use {
+            it.readText()
         }
-
-        btn.text = getString(R.string.open)
-        isFragmentDisplayed = false
+        return response
     }
 
-    private fun displayFragment() {
-        val simpleFragment = SimpleFragment.newInstance()
-        val fragmentManager = supportFragmentManager
-        val fragmentTransaction: FragmentTransaction = fragmentManager.beginTransaction()
-        fragmentTransaction.add(R.id.fragment_container, simpleFragment).addToBackStack(null).commit()
-
-        btn.text = getString(R.string.close)
-        isFragmentDisplayed = true
-
-    }
 }
