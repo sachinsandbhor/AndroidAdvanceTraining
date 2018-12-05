@@ -17,7 +17,7 @@ class MovieDetail : AppCompatActivity() {
             val movieDetailFragment: MovieDetailFragment = MovieDetailFragment.newInstance(movie)
             supportFragmentManager.beginTransaction()
                     .disallowAddToBackStack()
-                    .add(R.id.movie_detail_container, movieDetailFragment)
+                    .add(R.id.movie_detail, movieDetailFragment)
                     .commit()
         }
     }

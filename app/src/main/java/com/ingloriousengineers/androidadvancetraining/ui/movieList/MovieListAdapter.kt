@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.ingloriousengineers.androidadvancetraining.MovieApp
 import com.ingloriousengineers.androidadvancetraining.R
 import com.ingloriousengineers.androidadvancetraining.data.Result
 import com.squareup.picasso.Picasso
@@ -25,7 +26,7 @@ class MovieListAdapter(val movieList: List<Result>, val onClickListener: (Result
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         viewHolder.movieName.text = movieList.get(position).title
         viewHolder.release_date.text = movieList.get(position).release_date
-        val imageUrl = MovieApp.IMAGE_URL_BASE_PATH + movieList.get(position).poster_path
+        val imageUrl = MovieApp.BASE_URL + movieList.get(position).poster_path
         Picasso.get().load(imageUrl).into(viewHolder.movieImage);
         viewHolder.itemView.setOnClickListener { onClickListener(movieList.get(position), position) }
     }

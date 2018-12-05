@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.ingloriousengineers.androidadvancetraining.MovieApp
 import com.ingloriousengineers.androidadvancetraining.R
 import com.ingloriousengineers.androidadvancetraining.data.Result
 import com.squareup.picasso.Picasso
@@ -33,7 +34,7 @@ class MovieDetailFragment : Fragment() {
         if (movie != null) {
             movie_detail_name.text = movie.title
             release_detail_date.text = movie.release_date
-            val imageUrl = MovieApp.IMAGE_URL_BASE_PATH + movie.poster_path
+            val imageUrl = MovieApp.BASE_URL + movie.poster_path
             Picasso.get().load(imageUrl).into(movie_detail_image)
             overview.text = movie.overview
         }
